@@ -5,22 +5,20 @@ orbs:
     # Declare a dependency on the welcome-orb
     welcome: circleci/welcome-orb@0.4.1
 jobs:
-    print_hello:
+    create_infra:
         docker:
-            - image: circleci/node:13.8.0.
+            - image: amazon/aws-cli
         steps:
-            - run: echo hello
-    print_world:
-        docker:
-            - image: circleci/node:13.8.0.
-        steps:
-            - run: echo world
+            - checkout
+            - run:
+                  name: Ensure backend infra exists
+                  command: |
+                      aws cloudformation deploy \
+                      --template-file template.yml \
+                      --stack-name my-stack
 
 # Orchestrate or schedule a set of jobs
 workflows:
     welcome:
         jobs:
-            - print_hello
-            - print_world:
-                  - requires:
-                        - print_hello
+            - create_infra

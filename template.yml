@@ -1,0 +1,29 @@
+Resources:
+    EC2Instance:
+        Type: AWS::EC2::Instance
+        Properties:
+            KeyName: us-west-2-key-pair
+            ImageId: ami-0e472933a1395e172
+            Monitoring: true
+            SecurityGroups:
+                - !Ref SecurityGroup
+            UserData: !Base64 |
+                #!/bin/bash -ex
+                # put your script here
+            Tags:
+                - Key: Name
+                  Value: Created via cloud formation
+    SecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupName: ssh
+            GroupDescription: Enable ssh via port 22
+            VpcId: vpc-a8c397d0
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp: 0.0.0.0/0
+            Tags:
+                - Key: Name
+                  Value: Created via cloud formation
