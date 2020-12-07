@@ -4,8 +4,10 @@ Resources:
         Properties:
             KeyName: us-west-2-key-pair
             ImageId: ami-0e472933a1395e172
+            InstanceType: t2.micro
+            SubnetId: subnet-09b75f3e8a9dc3f2d
             Monitoring: true
-            SecurityGroups:
+            SecurityGroupIds:
                 - !Ref SecurityGroup
             UserData: !Base64 |
                 #!/bin/bash -ex
