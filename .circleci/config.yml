@@ -5,28 +5,31 @@ orbs:
     # Declare a dependency on the welcome-orb
     welcome: circleci/welcome-orb@0.4.1
 jobs:
-    print_hello:
+    write_file:
         docker:
-            - image: circleci/node:13.8.0
+            - image: cimg/base:2020.01
         steps:
-            - run: echo hello
-    print_world:
+            - run: echo start
+            - run: echo "written" > ~/val.txt
+            - persist_to_workspace:
+                  root: ~/
+                  paths:
+                      - val.txt
+    read_file:
         docker:
-            - image: circleci/node:13.8.0
+            - image: cimg/base:2020.01
         steps:
-            - run: echo world
-    print_env_variable:
-        docker:
-            - image: circleci/node:13.8.0
-        steps:
-            - run: echo ${test}
+            - run: echo "reading start"
+            - attach_workspace:
+                at: ~/
+            - run: cat ~/val.txt
+
 
 # Orchestrate or schedule a set of jobs
 workflows:
     welcome:
         jobs:
-            - print_hello
-            - print_env_variable
-            - print_world:
-                    requires:
-                        - print_hello
+            - write_file
+            - read_file:
+                requires:
+                    - write_file
