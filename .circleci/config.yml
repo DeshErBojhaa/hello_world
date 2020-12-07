@@ -26,6 +26,7 @@ workflows:
     welcome:
         jobs:
             - print_hello
+            - print_env_variable
             - print_world:
                     requires:
                         - print_hello
